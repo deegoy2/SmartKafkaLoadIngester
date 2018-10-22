@@ -22,29 +22,18 @@ public class ScheduledTask extends TimerTask {
     public Producer<String, String> producer;
     public Integer step;
 
-    public ScheduledTask(Integer sn, TreeMap<Integer,Integer> keyCounts, HashSet<Integer> localPartitions, Integer start, Integer step){
-
-        //KafkaMetricsUtil.initialize("cbb3");
-        String topicName = "msg.application";
-        Properties props = new Properties();
-        props.put("bootstrap.servers", "cbb-kafka-internal-ssl.stg-internal-cdc8.cbb-kafka-internal-ssl.labsitepersonalization.prod.walmart.com:9092");
-        props.put("acks", "all");
-        props.put("retries", 100);
-        props.put("batch.size", 1048576);
-        props.put("compression.type", "lz4");
-        props.put("linger.ms", 1000);
-        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-
+    public ScheduledTask(Integer sn, TreeMap<Integer,Integer> keyCounts, Integer start, Integer step){
+        KafkaMetricsUtil.initialize("cbb3");
         this.sn= sn;
         this.step= step;
         this.keyCounts = keyCounts;
-        this.localPartitions =localPartitions;
         this.start = start;
-        this.producer = new KafkaProducer<String, String>(props);
+        this.producer = Helper.getProducer();
+        this.localPartitions = Helper.GetPartitions(producer, "msg.application");
     }
 
     public void run() {
+
         for (int i = start; i< start+step; i++) {
             int prefix = i;
             prefix = prefix%66000000;
@@ -66,8 +55,8 @@ public class ScheduledTask extends TimerTask {
                             + _10Kb
                             + sn
                             + "}]}";
-            //producer.send(new ProducerRecord<>("msg.application", key, value));
-            //KafkaMetricsUtil.get().incDeadThreadCounter();
+            producer.send(new ProducerRecord<>("msg.application", key, value));
+            KafkaMetricsUtil.get().incDeadThreadCounter();
             keyCounts.put(part, keyCounts.get(part)+1);
         }
         start = start + step;

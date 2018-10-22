@@ -16,13 +16,12 @@ public class SchedulerMain {
         for(int i=0;i<128;i++){
             keyCounts.put(i,0);
         }
-        HashSet<Integer> localPartitions = Helper.GetPartitions();
         Integer start=0;
 
         Timer time = new Timer(); // Instantiate Timer Object
         int sn =Integer.parseInt(args[0]);
         int step = Integer.parseInt(args[1]);
-        ScheduledTask st = new ScheduledTask(sn,keyCounts,localPartitions,start ,step)  ; // Instantiate SheduledTask class
+        ScheduledTask st = new ScheduledTask(sn,keyCounts,start ,step)  ; // Instantiate SheduledTask class
         time.schedule(st, 0, 1000); // Create Repetitively task for every 1 secs
     }
 }
