@@ -16,10 +16,6 @@ import static com.walmart.deepak.utils.Helper.GetPartitions;
 public class Infinite {
     public static void main(String[] args) throws Exception{
 
-//        for(int i=128;i<256;i++){
-//            System.out.print("/data/testtg5/0_"+i+"/rocksdb/* ");
-//        }
-
         KafkaMetricsUtil.initialize("cbb3");
         String topicName = "msg.application";
         Properties props = new Properties();

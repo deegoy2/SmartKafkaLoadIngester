@@ -27,7 +27,7 @@ public class ScheduledTask extends TimerTask {
         //KafkaMetricsUtil.initialize("cbb3");
         String topicName = "msg.application";
         Properties props = new Properties();
-        props.put("bootstrap.servers", "cbb-kafka-internal-ssl.stg-internal-cdc8.cbb-kafka-internal-ssl.labsitepersonalization.prod.walmart.com:9092");
+            props.put("bootstrap.servers", "cbb-kafka-internal-ssl.stg-internal-cdc8.cbb-kafka-internal-ssl.labsitepersonalization.prod.walmart.com:9092");
         props.put("acks", "all");
         props.put("retries", 100);
         props.put("batch.size", 1048576);
@@ -47,7 +47,7 @@ public class ScheduledTask extends TimerTask {
     public void run() {
         for (int i = start; i< start+step; i++) {
             int prefix = i;
-            prefix = prefix%66000000;
+            prefix = prefix%13000000;
             if(prefix==0){
                 sn++;
             }
@@ -66,8 +66,8 @@ public class ScheduledTask extends TimerTask {
                             + _10Kb
                             + sn
                             + "}]}";
-            //producer.send(new ProducerRecord<>("msg.application", key, value));
-            //KafkaMetricsUtil.get().incDeadThreadCounter();
+            producer.send(new ProducerRecord<>("msg.application", key, value));
+            KafkaMetricsUtil.get().incDeadThreadCounter();
             keyCounts.put(part, keyCounts.get(part)+1);
         }
         start = start + step;

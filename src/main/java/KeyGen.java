@@ -24,10 +24,10 @@ public class KeyGen {
         }
 
         int ct=0;
-        for (Integer i = 0; i < 66000000; i++) {
+        for (Integer i = 0; i < 12800000; i++) {
             String key = "Deepak"+i;
             int part = Helper.partition(key.getBytes());
-            if(keyCounts.get(part) == 500000){
+            if(keyCounts.get(part) == 100000){
                 continue;
             }
             keyCounts.put(part, keyCounts.get(part)+1);
